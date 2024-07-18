@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오른쪽방향을 향하여 자동 슬라이드</title>
+    <style>
+        * {margin:0; padding:0; box-sizing: border-box;}
+        #layout {max-width:900px; height:500px; margin:auto; border:10px solid red;}
+        #slide {display: flex; width:300%; position:relative; left:-200%;}
+        #slide div {
+            border:1px solid blue; height:300px; background-color: aquamarine; 
+            width:100%; font-size:10rem;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded" , () => {
+
+            const area = document.getElementById("slideArea");
+            const s1 = document.getElementById('slide');    
+            
+            let x1;
+            let x2;
+            let pos;
+            let zz;
+            let ss = false; //슬라이드를 껐다는 의미를 심어둠 (우리맘대로).. (!ss)와 같다.
+
+            const toRight = () => {
+                s1.style.transition = 'left 1.5s';
+                s1.style.left = '-100%';
+
+                setTimeout( ()=>  x()  ,  1500 );
+
+                x = () => {
+                    s1.style.left = '-200%';
+                    s1.style.transition = 'none';
+                    s1.prepend(s1.lastElementChild);                    
+                }
+            }
+
+            //setInterval(  toRight  , 2000 );
+           
+            area.addEventListener("touchstart" , e=> {
+                //이중터치 방지하려고,(!ss)는 ss가 false라면, 이라는 의미
+                //ss가 false 일때만 실행 됨.
+                if( !ss )  x1 = e.touches[0].clientX;
+
+                area.addEventListener("touchend", zz= e => {
+                    x2 =  e.changedTouches[0].clientX;
+
+                    if(x1 < x2)  toRight();
+
+                    area.removeEventListener("touchend", zz);
+                });
+            });
+
+        });//////////////// 전체 끝
+    </script>
+</head>
+<body>
+    <div id="layout">
+        <section id="slideArea">
+            <h1>슬라이드</h1>
+            <div id="slide">
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
